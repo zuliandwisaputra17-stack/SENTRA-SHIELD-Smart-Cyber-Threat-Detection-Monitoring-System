@@ -1,0 +1,21 @@
+[Unit]
+Description=SENTRA SHIELD Agent
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /opt/sentra-agent/sentra_agent.py --config /etc/sentra/agent.json
+Restart=always
+RestartSec=3
+# Root dibutuhkan untuk nftables dan membaca log; kemampuan dibatasi seperlunya.
+CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_RAW CAP_DAC_READ_SEARCH
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+ReadWritePaths=/var/lib/sentra-agent
+MemoryMax=80M
+
+[Install]
+WantedBy=multi-user.target

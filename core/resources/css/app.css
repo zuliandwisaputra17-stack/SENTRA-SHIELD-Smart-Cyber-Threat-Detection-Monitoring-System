@@ -1,0 +1,305 @@
+/* Font dibundel lokal (fontsource, OFL-1.1). Subset latin saja; simbol lain jatuh ke font sistem. */
+@import '@fontsource/saira-stencil-one/latin-400.css';
+@import '@fontsource/saira-condensed/latin-400.css';
+@import '@fontsource/saira-condensed/latin-500.css';
+@import '@fontsource/saira-condensed/latin-600.css';
+@import '@fontsource/saira-condensed/latin-700.css';
+@import '@fontsource/fira-code/latin-400.css';
+@import '@fontsource/fira-code/latin-500.css';
+@import '@fontsource/fira-code/latin-600.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Token SENTRA SHIELD gaya OLIVE DRAB / OPS DARAT (docs/design-system.md). Nilai RGB tanpa koma
+ * agar modifier opasitas Tailwind bekerja. Kontras teks terhadap panel #181D10:
+ * ink 13,5:1 · ink-2 10,0:1 · ink-3 6,5:1 · khaki 8,5:1 · pasir 10,1:1 · amber 8,1:1 ·
+ * karat 5,8:1 · bata 5,8:1 · hijau sinyal 9,2:1. Lencana (tint 10–14 %) 4,8–7,4:1.
+ */
+:root {
+    color-scheme: dark;
+    --base: 14 17 10;           /* #0E110A olive-hitam: latar */
+    --panel: 24 29 16;          /* #181D10 olive drab gelap: pelat panel */
+    --raised: 32 39 26;         /* #20271A pelat terangkat / hover */
+    --inset: 40 48 32;          /* #283020 sumur, baris aktif */
+    --line: 52 60 38;           /* #343C26 garis pemisah */
+    --line-strong: 74 81 52;    /* #4A5134 garis tegas */
+    --line-control: 138 132 99; /* #8A8463 batas kontrol formulir (4,5:1) */
+    --ink: 236 228 200;         /* #ECE4C8 krem: teks utama */
+    --ink-2: 206 198 166;       /* #CEC6A6 teks sekunder */
+    --ink-3: 166 159 128;       /* #A69F80 label, keterangan */
+    --accent: 201 181 122;      /* #C9B57A khaki/tan: garis aksen, tautan, tombol utama, fokus */
+    --accent-strong: 220 203 150; /* #DCCB96 khaki saat hover */
+    --accent-ink: 23 20 10;     /* #17140A teks di atas khaki (9,1:1) */
+    --pasir: 216 197 156;       /* #D8C59C severity Rendah */
+    --aman: 95 211 154;         /* #5FD39A Tingkat Siaga Aman: hijau sinyal, beda dari olive */
+    --waspada: 229 167 59;      /* #E5A73B amber: Waspada · Sedang */
+    --siaga: 224 123 66;        /* #E07B42 oranye karat: Siaga · Tinggi */
+    --awas: 240 110 94;         /* #F06E5E merah bata: Awas · Kritis */
+}
+
+@layer base {
+    html {
+        /* Saira Condensed sempit: dasar 17 px agar isi tetap terbaca. */
+        font-size: 106.25%;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-feature-settings: 'kern' 1;
+    }
+    body {
+        @apply bg-canvas text-ink font-sans;
+        /* Tekstur kanvas + loreng sangat halus (SVG buatan sendiri, opasitas rendah). */
+        background-image:
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .85 0 0 0 0 .8 0 0 0 0 .6 0 0 0 .09 -.02'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='600' viewBox='0 0 600 600'%3E%3Cg fill='%23a3a46a' fill-opacity='.028'%3E%3Cpath d='M20 70l60-40 50 18 30-22 48 30-12 44-58 10-26 34-60-8-40-26z'/%3E%3Cpath d='M300 20l70 6 40 40-8 36 44 22-30 40-62-10-30-38-42-14 6-50z'/%3E%3Cpath d='M170 250l64-22 50 30 64-6 30 46-40 40-70-4-26 28-62-14-26-50z'/%3E%3Cpath d='M470 300l52 8 40 46-14 52-58 14-40-30-30-46 20-34z'/%3E%3Cpath d='M30 400l58-16 52 30 14 52-44 36-64-10-30-40z'/%3E%3Cpath d='M300 470l60-20 54 24 8 44-50 36-70-6-26-40z'/%3E%3C/g%3E%3Cg fill='%2308090a' fill-opacity='.11'%3E%3Cpath d='M110 150l44-18 34 20-6 36-40 14-36-20z'/%3E%3Cpath d='M380 170l40-6 30 30-20 34-46-4-12-30z'/%3E%3Cpath d='M240 420l50-12 30 28-18 38-50 6-26-30z'/%3E%3Cpath d='M520 520l40-10 26 30-16 30-44 0-14-28z'/%3E%3C/g%3E%3C/svg%3E"),
+            repeating-linear-gradient(0deg, rgb(255 255 255 / 0.012) 0 1px, transparent 1px 3px),
+            repeating-linear-gradient(90deg, rgb(0 0 0 / 0.05) 0 1px, transparent 1px 3px);
+        background-attachment: fixed;
+    }
+    h1, h2, h3 {
+        text-wrap: balance;
+    }
+    [x-cloak] {
+        display: none !important;
+    }
+    ::selection {
+        background: rgb(var(--accent) / 0.35);
+        color: rgb(var(--ink));
+    }
+    :focus-visible {
+        outline: 2px solid rgb(var(--accent));
+        outline-offset: 2px;
+    }
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: rgb(var(--line-strong)) transparent;
+    }
+    /* Formulir (plugin forms) memakai token. */
+    [type='text'], [type='email'], [type='password'], [type='number'], [type='date'], [type='search'], [type='url'], select, textarea {
+        @apply rounded-control border-line-control bg-canvas text-ink placeholder:text-ink-3 focus:border-accent focus:ring-accent/40;
+        color-scheme: dark;
+    }
+    [type='checkbox'] {
+        @apply rounded-chip border-line-control bg-canvas text-accent focus:ring-accent/40 focus:ring-offset-panel;
+    }
+}
+
+@layer components {
+    /*
+     * Panel = pelat besi: garis olive, braket khaki di empat sudut, baut di sudut dalam.
+     * Satu-satunya wadah bergaris; tanpa bayangan tebal.
+     */
+    .panel {
+        @apply relative rounded-panel border border-line bg-panel;
+        background-image: linear-gradient(180deg, rgb(var(--ink) / 0.03), transparent 45%);
+    }
+    .panel::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        border-radius: inherit;
+        --b: rgb(var(--accent) / 0.75);
+        background:
+            linear-gradient(var(--b), var(--b)) left top / 16px 2px no-repeat,
+            linear-gradient(var(--b), var(--b)) left top / 2px 16px no-repeat,
+            linear-gradient(var(--b), var(--b)) right top / 16px 2px no-repeat,
+            linear-gradient(var(--b), var(--b)) right top / 2px 16px no-repeat,
+            linear-gradient(var(--b), var(--b)) left bottom / 16px 2px no-repeat,
+            linear-gradient(var(--b), var(--b)) left bottom / 2px 16px no-repeat,
+            linear-gradient(var(--b), var(--b)) right bottom / 16px 2px no-repeat,
+            linear-gradient(var(--b), var(--b)) right bottom / 2px 16px no-repeat;
+        z-index: 1;
+    }
+    .panel::after {
+        content: '';
+        position: absolute;
+        inset: 6px;
+        pointer-events: none;
+        --baut: radial-gradient(circle at 3px 3px, rgb(var(--line-control) / 0.55) 0 1.4px, rgb(0 0 0 / 0.55) 1.5px 2.3px, transparent 2.4px);
+        background:
+            var(--baut) left top / 6px 6px no-repeat,
+            var(--baut) right top / 6px 6px no-repeat,
+            var(--baut) left bottom / 6px 6px no-repeat,
+            var(--baut) right bottom / 6px 6px no-repeat;
+        z-index: 1;
+    }
+    .panel-head {
+        @apply flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b border-line px-4 py-3 sm:px-5;
+        background-image: linear-gradient(90deg, rgb(var(--accent) / 0.07), transparent 60%);
+    }
+    /* Judul panel: stensil kapital (teks asli tetap; kapital lewat CSS). */
+    .panel-title {
+        @apply font-stensil text-[17px] uppercase tracking-[0.06em] text-ink;
+    }
+    .label-caps {
+        @apply font-display text-[12px] font-semibold uppercase tracking-[0.14em] text-ink-3;
+    }
+    /* Nomor bagian "01 //". */
+    .nomor-bagian {
+        @apply font-mono text-[12px] font-semibold tracking-wider text-accent;
+    }
+    /* Angka besar (KPI, skor) dalam stensil: terbaca dari proyektor. */
+    .num {
+        @apply font-stensil leading-none tracking-[0.02em];
+    }
+    /* Data teknis: IP, hash, [EV-n], kode aturan, teknik ATT&CK. */
+    .data {
+        @apply font-mono text-[0.9em] tabular-nums;
+    }
+    .chip {
+        @apply inline-flex items-center gap-1 whitespace-nowrap rounded-chip border border-line-strong bg-inset px-1.5 py-0.5 font-mono text-[12px] leading-4 text-ink-2;
+    }
+    .link {
+        @apply text-accent underline decoration-accent/40 underline-offset-2 hover:text-accent-strong hover:decoration-accent-strong;
+    }
+    /* Tabel padat bergaya log operasi. */
+    .tbl {
+        @apply min-w-full text-sm;
+    }
+    .tbl thead th {
+        @apply border-b border-accent/30 bg-inset/40 px-3 py-2.5 text-left font-display text-[12px] font-semibold uppercase tracking-[0.14em] text-ink-3;
+    }
+    .tbl tbody td {
+        @apply border-b border-line/70 px-3 py-2.5 align-top;
+    }
+    .tbl tbody tr {
+        @apply transition-colors duration-150 hover:bg-raised/60;
+    }
+    .skeleton {
+        background: linear-gradient(90deg, rgb(var(--inset)) 0%, rgb(var(--raised)) 50%, rgb(var(--inset)) 100%);
+        background-size: 200% 100%;
+        @apply animate-kilau rounded-chip;
+    }
+    /* Penggaris koordinat: tanda tick di tepi atas/kiri panel peta. */
+    .penggaris-x {
+        @apply pointer-events-none absolute inset-x-0 top-0 h-1.5;
+        background: repeating-linear-gradient(90deg, rgb(var(--accent) / 0.45) 0 1px, transparent 1px 24px);
+    }
+    .penggaris-y {
+        @apply pointer-events-none absolute inset-y-0 left-0 w-1.5;
+        background: repeating-linear-gradient(180deg, rgb(var(--accent) / 0.45) 0 1px, transparent 1px 24px);
+    }
+    /* Grid peta operasi (garis tipis + garis mayor). */
+    .grid-peta {
+        background-image:
+            linear-gradient(rgb(var(--accent) / 0.12) 1px, transparent 1px),
+            linear-gradient(90deg, rgb(var(--accent) / 0.12) 1px, transparent 1px),
+            linear-gradient(rgb(var(--accent) / 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgb(var(--accent) / 0.05) 1px, transparent 1px);
+        background-size: 120px 120px, 120px 120px, 24px 24px, 24px 24px;
+    }
+    /* Dog-tag: label pelat logam untuk satuan/agent. */
+    .dogtag {
+        @apply relative inline-flex min-w-0 flex-col justify-center rounded-[10px] py-1.5 pl-6 pr-3 font-mono text-[12px] leading-tight text-ink;
+        background: linear-gradient(150deg, #3d4231 0%, #2d3122 55%, #353a2a 100%);
+        border: 1px solid rgb(var(--line-control) / 0.55);
+        box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.07), inset 0 -1px 0 rgb(0 0 0 / 0.4), 0 1px 2px rgb(0 0 0 / 0.5);
+        text-shadow: 0 1px 0 rgb(0 0 0 / 0.6);
+    }
+    .dogtag::before {
+        content: '';
+        position: absolute;
+        left: 8px;
+        top: 50%;
+        width: 7px;
+        height: 7px;
+        border-radius: 9999px;
+        transform: translateY(-50%);
+        background: rgb(var(--base));
+        box-shadow: inset 0 1px 1px rgb(0 0 0 / 0.7), 0 0 0 1px rgb(var(--line-control) / 0.5);
+    }
+    /* Cap stempel: status penting. Tinta aus lewat mask derau (SVG buatan sendiri). */
+    .stempel {
+        @apply inline-block select-none rounded-[3px] px-2.5 py-1 font-stensil uppercase leading-none tracking-[0.12em];
+        border: 3px double currentColor;
+        transform: rotate(-4deg);
+        -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='60'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2.4 2.05'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+        mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='60'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2.4 2.05'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+    }
+    /* Pita bahaya (DATA LATIHAN). */
+    .pita-latihan {
+        background: repeating-linear-gradient(135deg, rgb(var(--waspada) / 0.16) 0 10px, transparent 10px 20px), rgb(var(--base));
+    }
+    /* Pratinjau LAPSIT: lembar dokumen krem di tengah UI gelap (teks 13,4:1, sitasi 7,4:1). */
+    .dokumen {
+        background: #ECE5CB;
+        color: #1A1E12;
+        color-scheme: light;
+    }
+    .dokumen .judul {
+        display: block;
+        font-family: 'Saira Stencil One', 'Saira Condensed', sans-serif;
+        font-size: 1.2em;
+        letter-spacing: 0.08em;
+        text-align: center;
+    }
+    .dokumen .kunci {
+        display: inline-block;
+        min-width: 5.5rem;
+        color: #555E3B;
+    }
+    .dokumen .bab {
+        font-weight: 700;
+        letter-spacing: 0.04em;
+    }
+    .dokumen .ev-ref {
+        color: #7A2E22;
+        font-family: 'Fira Code', ui-monospace, monospace;
+        font-size: 0.86em;
+        text-decoration: underline;
+        text-decoration-color: rgb(122 46 34 / 0.35);
+        text-underline-offset: 2px;
+    }
+    .dokumen .ev-ref:hover {
+        text-decoration-color: currentColor;
+    }
+    .dokumen :focus-visible {
+        outline-color: #7A2E22;
+    }
+    .dokumen ::selection {
+        background: rgb(201 181 122 / 0.5);
+        color: #1A1E12;
+    }
+    /* Latar halus layar masuk: grid peta. */
+    .latar-grid {
+        background-image:
+            linear-gradient(rgb(var(--accent) / 0.08) 1px, transparent 1px),
+            linear-gradient(90deg, rgb(var(--accent) / 0.08) 1px, transparent 1px);
+        background-size: 48px 48px;
+        background-position: -1px -1px;
+    }
+}
+
+/* Indikator pembaruan: titik hijau sinyal berdenyut = WebSocket, amber = polling 3 detik. */
+[data-sentra-live]::before {
+    content: '';
+    display: inline-block;
+    width: 0.5rem;
+    height: 0.5rem;
+    margin-right: 0.4rem;
+    border-radius: 9999px;
+    vertical-align: 0.05em;
+    background: rgb(var(--waspada));
+}
+[data-sentra-live][data-mode='live']::before {
+    background: rgb(var(--aman));
+    animation: denyut-live 1.8s cubic-bezier(.2, .8, .2, 1) infinite;
+}
+@keyframes denyut-live {
+    0% { box-shadow: 0 0 0 0 rgb(var(--aman) / 0.55); }
+    70% { box-shadow: 0 0 0 6px rgb(var(--aman) / 0); }
+    100% { box-shadow: 0 0 0 0 rgb(var(--aman) / 0); }
+}
+
+/* Gerak hanya bila pengguna tidak meminta gerak dikurangi. */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

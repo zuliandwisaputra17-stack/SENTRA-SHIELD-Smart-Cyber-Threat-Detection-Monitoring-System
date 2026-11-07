@@ -1,0 +1,8 @@
+root
+admin
+administrator
+ubuntu
+operator
+test
+guest
+latihan

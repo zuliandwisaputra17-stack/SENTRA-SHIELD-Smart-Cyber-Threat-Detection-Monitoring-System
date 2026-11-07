@@ -1,0 +1,4 @@
+Sumber: https://github.com/nextlevelbuilder/ui-ux-pro-max-skill (MIT)
+Commit: b7d5353e0130feb8c5574ef1251f8a1db1873ccb
+Dipasang: 7 Nov 2026, folder .claude/skills/ui-ux-pro-max dari repo upstream (tanpa scripts/tests).
+Dipakai sebagai alat bantu desain saat pengembangan; tidak ikut berjalan di aplikasi.

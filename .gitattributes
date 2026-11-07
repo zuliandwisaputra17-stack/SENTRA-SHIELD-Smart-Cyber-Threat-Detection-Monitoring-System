@@ -1,0 +1,15 @@
+# Semua file teks memakai akhir baris LF, juga saat repo di-clone di Windows.
+# Penting: skrip bash dan konfigurasi yang disalin ke container Linux akan rusak
+# bila diubah menjadi CRLF oleh Git for Windows.
+* text=auto eol=lf
+
+# Skrip Windows memakai CRLF.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+*.png binary
+*.jpg binary
+*.ico binary
+*.pdf binary
+*.sqlite binary

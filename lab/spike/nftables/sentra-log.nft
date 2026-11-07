@@ -1,0 +1,2 @@
+# Aturan log koneksi ke port tertutup lewat NFLOG group 7 (dibatasi lajunya).
+add rule inet sentra input tcp flags & (syn | ack) == syn tcp dport != @open_tcp limit rate 400/second burst 800 packets log group 7 prefix "SENTRA_CLOSED"

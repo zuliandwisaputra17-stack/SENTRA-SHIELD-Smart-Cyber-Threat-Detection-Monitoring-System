@@ -1,0 +1,24 @@
+# Ruleset SENTRA (spike), bagian dasar: blokir dengan durasi + port terbuka.
+# Aturan log NFLOG ada di sentra-log.nft dan dimuat terpisah, sehingga blokir
+# tetap bisa diuji walau kernel tidak mendukung NFLOG.
+table inet sentra {
+    set blocklist4 {
+        type ipv4_addr
+        flags timeout
+    }
+
+    set open_tcp {
+        type inet_service
+        elements = { 22, 80, 9000 }
+    }
+
+    chain input {
+        type filter hook input priority -10; policy accept;
+
+        # Blokir diletakkan paling awal agar koneksi yang sudah terbuka ikut putus.
+        ip saddr @blocklist4 counter drop
+
+        iif "lo" accept
+        ct state established,related accept
+    }
+}

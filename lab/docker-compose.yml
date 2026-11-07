@@ -1,0 +1,174 @@
+# Lab demo SENTRA SHIELD — satu perintah:
+#
+#   docker compose -f lab/docker-compose.yml up -d --build
+#
+# Dashboard: https://localhost:8443 (sertifikat lab self-signed).
+# Topologi (PRD bagian 12 + keputusan A1): penyerang hanya di net-wan dengan
+# satu IP tetap, sehingga IP-nya sama saat menyerang Kodim A dan Kodim B.
+name: sentra-lab
+
+x-build-args: &build-args
+  BASE_IMAGE: ${SENTRA_BASE_IMAGE:-ubuntu:24.04}
+  # Hanya untuk build di balik proxy; kosong di laptop biasa.
+  HTTPS_PROXY: ${SENTRA_BUILD_HTTPS_PROXY:-}
+  NO_PROXY: ${SENTRA_BUILD_NO_PROXY:-}
+
+x-target-agent: &target-agent
+  build:
+    context: ..
+    dockerfile: lab/target/Dockerfile
+    network: ${SENTRA_BUILD_NETWORK:-default}
+    args: *build-args
+  image: sentra-shield/target:lab
+  cap_add: [NET_ADMIN]
+  restart: unless-stopped
+  depends_on:
+    sentra-core:
+      condition: service_healthy
+
+services:
+  mysql:
+    image: ${SENTRA_MYSQL_IMAGE:-mysql:8.4}
+    environment:
+      MYSQL_DATABASE: sentra
+      MYSQL_USER: sentra
+      MYSQL_PASSWORD: ${SENTRA_DB_PASSWORD:-sentra-lab}
+      MYSQL_ROOT_PASSWORD: ${SENTRA_DB_ROOT_PASSWORD:-sentra-lab-root}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      net-pusat: { ipv4_address: 172.31.0.3 }
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -usentra -p$$MYSQL_PASSWORD --silent"]
+      interval: 3s
+      timeout: 3s
+      retries: 60
+    restart: unless-stopped
+
+  sentra-core:
+    build:
+      context: ../core
+      network: ${SENTRA_BUILD_NETWORK:-default}
+      args:
+        <<: *build-args
+        COMPOSER_IMAGE: ${SENTRA_COMPOSER_IMAGE:-composer:2}
+        NODE_IMAGE: ${SENTRA_NODE_IMAGE:-node:22-bookworm-slim}
+    image: sentra-shield/core:lab
+    environment:
+      APP_URL: https://localhost:8443
+      DB_HOST: mysql
+      DB_DATABASE: sentra
+      DB_USERNAME: sentra
+      DB_PASSWORD: ${SENTRA_DB_PASSWORD:-sentra-lab}
+      SENTRA_SEED_PASSWORD: ${SENTRA_SEED_PASSWORD:-Latihan#2026}
+      # Agent lab: hostname:KODE-SATUAN:jenis_aset (kode pendaftaran acak dibuat otomatis).
+      SENTRA_LAB_AGENTS: kodim-a:KODIM-LAT-A:web,kodim-b:KODIM-LAT-B:web,plc-sim:KODIM-LAT-A:ot
+      # Situs dummy yang dijaga Penjaga Situs (portal LINGKUNGAN LATIHAN).
+      SENTRA_LAB_SITES: KODIM-LAT-A=http://kodim-a/,KODIM-LAT-B=http://kodim-b/
+    volumes:
+      - core-state:/var/lib/sentra
+      - core-storage:/var/www/core/storage/app
+      - lab-pki:/pki
+    ports:
+      - "8443:443"
+    networks:
+      net-pusat: { ipv4_address: 172.31.0.2 }
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: unless-stopped
+
+  kodim-a:
+    <<: *target-agent
+    hostname: kodim-a
+    environment:
+      AGENT_HOSTNAME: kodim-a
+      AGENT_SOURCES: web,ssh,firewall,fim
+      SATUAN_NAMA: Kodim Latihan A
+    volumes:
+      - lab-pki:/pki:ro
+      - kodim-a-agent:/var/lib/sentra-agent
+    networks:
+      net-wan: { ipv4_address: 172.30.0.11 }
+      net-kodim-a: { ipv4_address: 172.32.0.11 }
+      net-pusat: { ipv4_address: 172.31.0.11 }
+
+  kodim-b:
+    <<: *target-agent
+    hostname: kodim-b
+    environment:
+      AGENT_HOSTNAME: kodim-b
+      AGENT_SOURCES: web,ssh,firewall,fim
+      SATUAN_NAMA: Kodim Latihan B
+    volumes:
+      - lab-pki:/pki:ro
+      - kodim-b-agent:/var/lib/sentra-agent
+    networks:
+      net-wan: { ipv4_address: 172.30.0.12 }
+      net-kodim-b: { ipv4_address: 172.33.0.12 }
+      net-pusat: { ipv4_address: 172.31.0.12 }
+
+  plc-sim:
+    build:
+      context: ..
+      dockerfile: lab/plc-sim/Dockerfile
+      network: ${SENTRA_BUILD_NETWORK:-default}
+      args: *build-args
+    image: sentra-shield/plc-sim:lab
+    hostname: plc-sim
+    cap_add: [NET_ADMIN, NET_RAW]
+    environment:
+      AGENT_HOSTNAME: plc-sim
+      AGENT_SOURCES: modbus,firewall
+    volumes:
+      - lab-pki:/pki:ro
+      - plc-sim-agent:/var/lib/sentra-agent
+    networks:
+      net-wan: { ipv4_address: 172.30.0.20 }
+      net-kodim-a: { ipv4_address: 172.32.0.20 }
+      net-pusat: { ipv4_address: 172.31.0.20 }
+    depends_on:
+      sentra-core:
+        condition: service_healthy
+    restart: unless-stopped
+
+  attacker:
+    build:
+      context: attacker
+      network: ${SENTRA_BUILD_NETWORK:-default}
+      args: *build-args
+    image: sentra-shield/attacker:lab
+    hostname: attacker
+    networks:
+      net-wan: { ipv4_address: 172.30.0.66 }
+    restart: unless-stopped
+
+  # LLM lokal untuk LAPSIT (opsional, Fase 2): docker compose --profile llm up -d
+  ollama:
+    image: ${SENTRA_OLLAMA_IMAGE:-ollama/ollama:latest}
+    profiles: ["llm"]
+    volumes:
+      - ollama-data:/root/.ollama
+    networks:
+      net-pusat: { ipv4_address: 172.31.0.4 }
+    restart: unless-stopped
+
+networks:
+  net-wan:
+    ipam: { config: [{ subnet: 172.30.0.0/24 }] }
+  net-pusat:
+    ipam: { config: [{ subnet: 172.31.0.0/24 }] }
+  net-kodim-a:
+    ipam: { config: [{ subnet: 172.32.0.0/24 }] }
+  net-kodim-b:
+    ipam: { config: [{ subnet: 172.33.0.0/24 }] }
+
+volumes:
+  mysql-data:
+  core-state:
+  core-storage:
+  lab-pki:
+  kodim-a-agent:
+  kodim-b-agent:
+  plc-sim-agent:
+  ollama-data:
